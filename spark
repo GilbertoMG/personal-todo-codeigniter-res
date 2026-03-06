@@ -1,0 +1,50 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * CodeIgniter Spark - CLI Tool
+ *
+ * This file is used to run the CodeIgniter CLI tools.
+ */
+
+// Ensure the script is being run from the command line
+define('STDIN', defined('STDIN') ? STDIN : fopen('php://stdin', 'rb'));
+
+// Ensure current directory is in path
+chdir(__DIR__);
+
+// Override $_SERVER variables for proper operation
+$_SERVER['HTTP_HOST']   = 'localhost';
+$_SERVER['SERVER_NAME'] = 'localhost';
+$_SERVER['DOCUMENT_ROOT'] = __DIR__;
+
+// We need to define APPPATH and FCPATH
+
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR);
+define('APPPATH', realpath(__DIR__ . '/app') . DIRECTORY_SEPARATOR);
+define('WRITEPATH', realpath(__DIR__ . '/writable') . DIRECTORY_SEPARATOR);
+define('ROOTPATH', realpath(__DIR__) . DIRECTORY_SEPARATOR);
+define('VENDORPATH', realpath(ROOTPATH . 'vendor') . DIRECTORY_SEPARATOR);
+
+// Load the Composer autoloader
+require ROOTPATH . 'vendor/autoload.php';
+
+// Load our Paths config file
+$pathsConfig = APPPATH . 'Config/Paths.php';
+require $pathsConfig;
+
+$paths = new Config\Paths();
+
+// Location of the system directory
+require rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+// Load environment settings from .env files
+require_once SYSTEMPATH . 'Config/DotEnv.php';
+(new CodeIgniter\Config\DotEnv(ROOTPATH))->load();
+
+$app = Config\Services::codeigniter();
+$app->initialize();
+$app->setContext('php-cli');
+$app->run();

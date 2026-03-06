@@ -1,0 +1,14 @@
+/vendor/
+.env
+/writable/*
+!/writable/.gitkeep
+/writable/cache/*
+!/writable/cache/.gitkeep
+/writable/logs/*
+!/writable/logs/.gitkeep
+/writable/session/*
+!/writable/session/.gitkeep
+/writable/uploads/*
+!/writable/uploads/.gitkeep
+/build/
+phpunit.xml
