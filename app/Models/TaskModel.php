@@ -30,7 +30,7 @@ class TaskModel extends Model
     // Validation
     protected $validationRules = [
         'title' => 'required|min_length[3]|max_length[255]',
-        'status' => 'in_list[todo,doing,done]',
+        'status' => 'in_list[todo,doing,done,limbo]',
     ];
     protected $validationMessages = [
         'title' => [
@@ -39,7 +39,7 @@ class TaskModel extends Model
             'max_length' => 'O título deve ter no máximo 255 caracteres.'
         ],
         'status' => [
-            'in_list' => 'O status deve ser: todo, doing ou done.'
+            'in_list' => 'O status deve ser: todo, doing, done ou limbo.'
         ]
     ];
     protected $skipValidation = false;

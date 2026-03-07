@@ -85,6 +85,10 @@
             border-bottom-color: #198754;
         }
 
+        .col-limbo .kanban-col-header {
+            border-bottom-color: #6c757d;
+        }
+
         .drag-over {
             background: #d1d6db;
             border: 2px dashed #adb5bd;
@@ -104,6 +108,11 @@
 
     <div class="container-fluid">
         <div class="kanban-board" id="kanban-board">
+            <!-- Limbo Column -->
+            <div class="kanban-col col-limbo">
+                <div class="kanban-col-header text-secondary">Limbo (<span id="count-limbo">0</span>)</div>
+                <div class="kanban-col-body" data-status="limbo"></div>
+            </div>
             <!-- Todo Column -->
             <div class="kanban-col col-todo">
                 <div class="kanban-col-header text-primary">Para Fazer (<span id="count-todo">0</span>)</div>
@@ -144,6 +153,7 @@
                         <div class="mb-3">
                             <label for="taskStatus" class="form-label">Status Inicial</label>
                             <select class="form-select" id="taskStatus">
+                                <option value="limbo">Limbo</option>
                                 <option value="todo">Para Fazer</option>
                                 <option value="doing">Fazendo</option>
                                 <option value="done">Feito</option>
@@ -222,7 +232,7 @@
                 // Clear columns
                 document.querySelectorAll('.kanban-col-body').forEach(col => col.innerHTML = '');
 
-                let counts = { todo: 0, doing: 0, done: 0 };
+                let counts = { limbo: 0, todo: 0, doing: 0, done: 0 };
 
                 data.forEach(task => {
                     counts[task.status]++;
@@ -230,6 +240,7 @@
                 });
 
                 // Update badges
+                document.getElementById('count-limbo').textContent = counts.limbo;
                 document.getElementById('count-todo').textContent = counts.todo;
                 document.getElementById('count-doing').textContent = counts.doing;
                 document.getElementById('count-done').textContent = counts.done;
