@@ -8,4 +8,4 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 
 // API Routes
-$routes->resource('api/tasks', ['controller' => 'Tasks']);
+$routes->resource('tasks', ['controller' => 'Tasks']);

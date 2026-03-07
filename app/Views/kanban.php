@@ -58,10 +58,10 @@
 
         .task-card {
             cursor: grab;
-            background: #fff;
             border: none;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             user-select: none;
+            transition: background-color 0.2s, color 0.2s;
         }
 
         .task-card:active {
@@ -73,20 +73,100 @@
             opacity: 0.5;
         }
 
+        /* Tema Para Fazer (Azul) */
         .col-todo .kanban-col-header {
             border-bottom-color: #0d6efd;
         }
 
-        .col-doing .kanban-col-header {
-            border-bottom-color: #fd7e14;
+        .col-todo .task-card {
+            background-color: #0d6efd;
+            color: #fff;
         }
 
+        .col-todo .task-card .text-muted {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        .col-todo .task-card .btn-outline-secondary,
+        .col-todo .task-card .btn-outline-danger {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .col-todo .task-card .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Tema Fazendo (Warning) */
+        .col-doing .kanban-col-header {
+            border-bottom-color: #ffc107;
+        }
+
+        .col-doing .task-card {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .col-doing .task-card .text-muted {
+            color: rgba(33, 37, 41, 0.75) !important;
+        }
+
+        .col-doing .task-card .btn-outline-secondary,
+        .col-doing .task-card .btn-outline-danger {
+            color: #212529;
+            border-color: rgba(33, 37, 41, 0.4);
+        }
+
+        .col-doing .task-card .btn:hover {
+            background-color: rgba(33, 37, 41, 0.1);
+        }
+
+        /* Tema Feito (Green) */
         .col-done .kanban-col-header {
             border-bottom-color: #198754;
         }
 
+        .col-done .task-card {
+            background-color: #198754;
+            color: #fff;
+        }
+
+        .col-done .task-card .text-muted {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        .col-done .task-card .btn-outline-secondary,
+        .col-done .task-card .btn-outline-danger {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .col-done .task-card .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Tema Limbo (Danger) */
         .col-limbo .kanban-col-header {
-            border-bottom-color: #6c757d;
+            border-bottom-color: #dc3545;
+        }
+
+        .col-limbo .task-card {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .col-limbo .task-card .text-muted {
+            color: rgba(255, 255, 255, 0.75) !important;
+        }
+
+        .col-limbo .task-card .btn-outline-secondary,
+        .col-limbo .task-card .btn-outline-danger {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .col-limbo .task-card .btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         .drag-over {
@@ -110,7 +190,7 @@
         <div class="kanban-board" id="kanban-board">
             <!-- Limbo Column -->
             <div class="kanban-col col-limbo">
-                <div class="kanban-col-header text-secondary">Limbo (<span id="count-limbo">0</span>)</div>
+                <div class="kanban-col-header text-danger">Limbo (<span id="count-limbo">0</span>)</div>
                 <div class="kanban-col-body" data-status="limbo"></div>
             </div>
             <!-- Todo Column -->
@@ -175,7 +255,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 
     <script>
-        const API_URL = '/api/tasks';
+        const API_URL = 'http://localhost/antigravity/projeto1/api/public/tasks';
         let taskModal;
 
         // Setup fetch interceptor to automatically add CSRF token

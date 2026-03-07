@@ -1,74 +1,105 @@
-<<<<<<< HEAD
-# CodeIgniter 4 Application Starter
+# 📌 CodeIgniter 4 Kanban ToDo List
 
-## What is CodeIgniter?
+Um aplicativo de gerenciamento de tarefas em formato Kanban (arrastar e soltar), desenvolvido focado em separação de responsabilidades (Backend RESTful API + Frontend Vanilla JS consumindo os dados). Construído sobre o framework **CodeIgniter 4**.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+![Kanban Preview](https://img.shields.io/badge/Status-Completed-success)
+![PHP 8.0+](https://img.shields.io/badge/PHP-8.0%2B-blue)
+![CodeIgniter 4](https://img.shields.io/badge/CodeIgniter-4.x-EE4323?logo=codeigniter)
+![Bootstrap 5](https://img.shields.io/badge/Bootstrap-5.3-7952B3?logo=bootstrap)
+![Vanilla JS](https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?logo=javascript)
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+---
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## 🚀 Funcionalidades
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- **Layout Kanban Responsivo:** 4 colunas dinâmicas (🔴 Limbo, 🔵 Para Fazer, 🟡 Fazendo, 🟢 Feito).
+- **Drag and Drop (Arrastar e Soltar):** Movimente as tarefas entre as colunas fluidamente utilizando a API HTML5 nativa.
+- **RESTful API:** Toda a comunicação de dados é feita via requisições HTTP (`GET`, `POST`, `PUT`, `DELETE`).
+- **Segurança Reforçada:** Implementação rigorosa do **CSRF Token** nativo do CI4 injetado silenciosamente nas requisições do frontend.
+- **Soft Deletes:** Tarefas excluídas não quebram o banco de forma definitiva.
+- **Micro-interações:** Feedbacks visuais amigáveis usando [SweetAlert2](https://sweetalert2.github.io/).
+- **Validação de Servidor:** Regras estritas no Model impedindo inserção de lixo na base de dados.
 
-## Installation & updates
+---
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+## 🏗️ Arquitetura
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+O sistema adota uma abordagem moderna:
+* **Backend (`/api/app/Controllers/Tasks.php`):** Foca estritamente na regra de negócios, operando um *Resource Controller* que responde apenas JSON.
+* **Frontend (`/api/app/Views/kanban.php`):** Uma SPA (Single Page Application) leve renderizada apenas uma vez. Toda a montagem das colunas e ações de CRUD são feitas pelo JavaScript manipulando a DOM.
+* **Banco de Dados (MySQL):** A estrutura de tarefas (id, title, description, status, timestamps) é gerenciada e construída de forma automatizada usando **Migrations** do CodeIgniter.
 
-## Setup
+---
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## ⚙️ Rotas da API (`/tasks`)
 
-## Important Change with index.php
+| Método | Endpoint         | Descrição | Relatório Esperado |
+|--------|------------------|-----------|--------------------|
+| `GET`  | `/tasks`       | Lista todas as tarefas não deletadas | `[ { id: 1, title: '...', status: 'todo' } ]` |
+| `POST` | `/tasks`       | Retorna e cadastra uma nova tarefa | `201 Created` |
+| `PUT`  | `/tasks/:id`   | Atualiza informações ou o `status` (arrastar) | `200 OK` |
+| `DELETE`| `/tasks/:id`  | Aplica um *Soft Delete* na tarefa | `200 OK` (Message: deleted) |
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+*Nota: Todas as requisições (exceto GET) exigem o header `X-CSRF-TOKEN` fornecido como uma meta tag no frontend.*
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+---
 
-**Please** read the user guide for a better explanation of how CI4 works!
+## 🛠️ Instalação e Configuração Local
 
-## Repository Management
+Siga as instruções abaixo para rodar o projeto perfeitamente em sua máquina:
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+### 1. Pré-requisitos
+- PHP 8.0 ou superior (com as extensões `intl`, `mbstring`, `json`, `mysqlnd` habilitadas).
+- Composer
+- Servidor MySQL ativo
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+### 2. Clonando o Repositório
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd seu-repositorio/api
+```
 
-## Server Requirements
+### 3. Instalando as Dependências
+```bash
+composer install
+```
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+### 4. Configurando o Ambiente
+Copie ou renomeie o arquivo de ambiente original `env` para `.env`:
+```bash
+cp env .env
+```
+Abra o `.env` e ajuste para o seu banco local e ambiente:
+```ini
+CI_ENVIRONMENT = development
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+database.default.hostname = localhost
+database.default.database = todo_list
+database.default.username = root
+database.default.password = root
+database.default.DBDriver = MySQLi
+```
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+### 5. Executando as Migrations (Banco de Dados)
+Dentro da pasta do projeto (`/api`), rode a action para constuir a tabela `tasks`:
+```bash
+php spark migrate
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+### 6. Iniciando o Servidor de Desenvolvimento
+Inicie a aplicação utilizando o emulador embutido do PHP:
+```bash
+php spark serve --port 8080
+```
+> A aplicação estará disponível em: `http://localhost:8080`
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
-=======
-# personal-todo-codeigniter-res
-Personal Todo CI 4.7 REST
->>>>>>> 8590647c99bed7af31a26f015e330051adfdf005
+---
+
+## 👨‍💻 Stack Tecnológica
+* **PHP Base:** CodeIgniter 4 (AppStarter)
+* **Design System / CSS:** Bootstrap 5.3 (via CDN)
+* **Feedback Gráfico:** SweetAlert2
+* **Ícones:** FontAwesome (Opcional, ou fallback para SVG)
+
+---
+*Criado com as melhores práticas de Engenharia de Software focada na simplicidade e escalabilidade.*
